@@ -4,7 +4,7 @@ const monthsGR = ['Ιανουαρίου', 'Φεβρουαρίου', 'Μαρτί�
 $(document).ready(function(){
 
     // add event for clock every 1s
-    setInterval(printGRDate, 1000)
+    setInterval(printGRDate, 1000) 
 
     $('#addNoteBtn').on('click', function(){
         onInsertControler($('#inputNote').val().trim())
