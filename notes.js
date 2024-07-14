@@ -1,20 +1,21 @@
 const daysGR  = ['Κυριακή', 'Δευτέρα', 'Τρίτη', 'Τετάρτη', 'Πέμπτη', 'Παρασκευή', 'Σάββατο']
 const monthsGR = ['Ιανουαρίου', 'Φεβρουαρίου', 'Μαρτίου', 'Απριλίου', 'Μαΐου', 'Ιουνίου', 'Ιουλίου', 'Αυγούστου', 'Σεπτεμβρίου', 'Οκτωβρίου', 'Νοεμβρίου', 'Δεκεμβρίου']
 
-//set listeners when DOM is Loaded
-window.addEventListener('DOMContentLoaded', function(){
+$(document).ready(function(){
 
     // add event for clock every 1s
-    this.setInterval(printGRDate, 1000)
+    setInterval(printGRDate, 1000)
 
-    this.document.querySelector('#addNoteBtn').addEventListener('click', function(){
-        onInsertControler(document.querySelector('#inputNote').value.trim())
+    $('#addNoteBtn').on('click', function(){
+        onInsertControler($('#inputNote').val().trim())
+        $('#inputNote').val('')
     })
 
-    this.document.querySelector('#inputNote').addEventListener('keyup', function(e){
+    $('#inputNote').on('keyup', function(e){
         //check if the key pressed is actually enter
         if (e.key ==='Enter'){
-            onInsertControler(this.value.trim())
+            onInsertControler($(this).val().trim())
+            $(this).val('')
         }
     })
 
@@ -44,7 +45,7 @@ function printGRDate(){
                     ${(minutes < 10) ? '0' : ''}${minutes} : 
                     ${(seconds < 10) ? '0' : ''}${seconds}`
 
-    document.querySelector('#dateTxt').innerHTML = dateStr + '<br>' + timeStr
+    $('#dateTxt').html(dateStr + '<br>' + timeStr);
 }
 
 /**
@@ -65,33 +66,30 @@ function onInsertControler(data){
  * @param {String} data 
  */
 function insertNote(data){
-    const origin = document.querySelector('.note.hidden')
-    const cloned = origin.cloneNode(true)
+    const origin = $('.note.hidden')
+    const cloned = origin.clone()
 
-    cloned.classList.remove('hidden')
-    const lbl = cloned.querySelector('.note-text')
-    lbl.textContent = data
-    const notesWrapper = document.querySelector('.notes-wrapper')
+    cloned.removeClass('hidden')
+    cloned.addClass('d-flex')
+    const lbl = cloned.find('.note-text')
+    lbl.text(data)
+    const notesWrapper = $('.notes-wrapper')
     //add an event listener to remove the element if delete button is clicked
-    cloned.querySelector('#notDelBtn').addEventListener('click', function(){
+    cloned.find('#notDelBtn').on('click', function(){
         cloned.remove()
     })
     //add event listener for checkbox
-    cloned.querySelector('#noteCheck').addEventListener('change', function(){
-        //strike-through if it is checked
-        if (lbl.style.textDecoration === 'line-through'){
-            lbl.style.textDecoration = 'none'
-        } else {
-            lbl.style.textDecoration = 'line-through'
-        }
+    cloned.find('#noteCheck').on('change', function(){
+        lbl.toggleClass('line-through', this.checked);
     })
-    notesWrapper.appendChild(cloned) 
+
+    notesWrapper.append(cloned) 
 }
 
 /**
  * Resets the input text element value to empty string
  */
 function reset(){
-    const inputText = document.querySelector('#inputNote')
-    inputText.value = ""
+    const inputText = $('#inputNote')
+    inputText.text("")
 }
